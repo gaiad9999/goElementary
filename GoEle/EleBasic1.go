@@ -12,10 +12,10 @@ func SimplePrint() {
 
 // SimpleCallVarInt : 변수(int) 선언 간단소개
 func SimpleCallVarInt(a int, b int) (int, int) {
-	var DefinedVariableInt int = a // 변수선언방식 1번 var <name> <type> = <value>
-	SimpleDefinedVariableInt := b  // 변수선언방식 2번 <name> := <value>  //타입 자동지정
+	var VarInt int = a // 변수선언방식 1번 var <name> <type> = <value>
+	SimpleVarInt := b  // 변수선언방식 2번 <name> := <value>  //타입 자동지정
 
-	return DefinedVariableInt, SimpleDefinedVariableInt
+	return VarInt, SimpleVarInt
 }
 func SimplePrintInt(a, b int) {
 	fmt.Println("a =", a, "b =", b)
@@ -23,10 +23,10 @@ func SimplePrintInt(a, b int) {
 
 // SimpleCallVarStr : 변수(str) 선언 간단소개
 func SimpleCallVarStr(a string, b string) (string, string) {
-	var DefinedVariableStr string = a // 변수선언방식 1번 var <name> <type> = <value>
-	SimpleDefinedVariableStr := b     // 변수선언방식 2번 <name> := <value>  //타입 자동지정
+	var VarStr string = a // 변수선언방식 1번 var <name> <type> = <value>
+	SimpleVarStr := b     // 변수선언방식 2번 <name> := <value>  //타입 자동지정
 
-	return DefinedVariableStr, SimpleDefinedVariableStr
+	return VarStr, SimpleVarStr
 }
 func SimplePrintStr(a, b string) {
 	fmt.Println(a, b)
