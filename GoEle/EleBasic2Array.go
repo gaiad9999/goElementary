@@ -6,10 +6,10 @@ import "fmt"
 func SimpleCallVarIntList(a [2]int) (int, int) {
 	var b [2]int = a
 	// b := [2]int{12, 14}  //이와 같이 리스트는 [n]type{value}의 형태로 정의된다.
-	var DefinedVariableInt1 int = b[0] // 변수선언방식 1번 var <name> <type> = <value>
-	DefinedVariableInt2 := b[1]
+	var VarIntList int = b[0] // 변수선언방식 1번 var <name> <type> = <value>
+	SimpleVarIntList := b[1]
 
-	return DefinedVariableInt1, DefinedVariableInt2
+	return VarIntList, SimpleVarIntList
 }
 
 // SimpleCallVarIntLongList : 배열 선언 또 다른버전
