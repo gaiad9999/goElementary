@@ -30,6 +30,7 @@ func SimpleError() {
 
 // 2) 에러 분석을 위한 세부속성 정의
 // 아래는 인터페이스에 구조체를 저장하여 에러를 관리분석하는 방법이다.
+// 인터페이스 error는 메소드 Error() string을 포함하고 있다.
 // Error() 메소드를 이용한 구조체
 // PwError : 에러의 세부속성이 담긴 구조체
 type PwError struct {
