@@ -1,6 +1,6 @@
 # goElementary
 
-_Golang_ 스터디용 프로젝트입니다.
+_Golang_ 스터디용 프로젝트입니다.\n
 내용은 스터디 진척상황에 따라 수정됩니다.
 
 ## Component
