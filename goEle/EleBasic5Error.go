@@ -23,7 +23,7 @@ func DivwError(a, b float64) (float64, error) {
 	return a / b, nil
 }
 
-func SimpleError() {
+func SimpleErrorOne( {
 	_, err := DivwError(2.0, 0.0)
 	fmt.Println(err)
 }
@@ -52,7 +52,7 @@ func RegAccount(name, pw string) error {
 }
 
 // error가 nil이 아닌 경우를 주목.
-func TestError() {
+func SimpleErrorTwo() {
 	err := RegAccount("myID", "mypw")
 	if err != nil {
 		// 여기 나오는 구문은 (구조체, bool) := 인터페이스.(구조체타입)
