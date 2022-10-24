@@ -23,7 +23,7 @@ func DivwError(a, b float64) (float64, error) {
 	return a / b, nil
 }
 
-func SimpleErrorOne( {
+func SimpleErrorOne() {
 	_, err := DivwError(2.0, 0.0)
 	fmt.Println(err)
 }
