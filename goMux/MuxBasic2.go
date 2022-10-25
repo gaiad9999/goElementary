@@ -66,6 +66,11 @@ func InitUserHandler() http.Handler {
 
 // 동작 Get : DB 전체출력
 func GetUserList(rw http.ResponseWriter, r *http.Request) {
+	// 입력
+
+	// 주요 코드
+
+	// 출력
 	rw.WriteHeader(http.StatusOK)
 	rw.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(rw).Encode(UserList)
@@ -73,10 +78,12 @@ func GetUserList(rw http.ResponseWriter, r *http.Request) {
 
 // 동작 Get : DB내 특정 데이터 출력
 func GetUser(rw http.ResponseWriter, r *http.Request) {
+	// 입력
 	vars := mux.Vars(r)
 	idx, _ := strconv.Atoi(vars["id"])
+	// 주요 코드
 	user := UserList[idx]
-
+	// 출력
 	rw.WriteHeader(http.StatusOK)
 	rw.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(rw).Encode(user)
@@ -85,33 +92,39 @@ func GetUser(rw http.ResponseWriter, r *http.Request) {
 // 동작 Create : Json을 입력받아 DB에 저장
 // 리스트를 받아 추가하도록 수정함
 func CreateUser(rw http.ResponseWriter, r *http.Request) {
+	// 입력
 	var users Users                            //#수정
 	_ = json.NewDecoder(r.Body).Decode(&users) //#수정
-	UserList = append(UserList, users...)      //#추가
-	UserList.IdxReset()                        //#추가
-
+	// 주요 코드
+	UserList = append(UserList, users...) //#추가
+	UserList.IdxReset()                   //#추가
+	// 출력
 	rw.WriteHeader(http.StatusCreated)
 }
 
 // 동작 Update : Json을 입력받아 DB에 저장된 값 수정
 func UpdateUser(rw http.ResponseWriter, r *http.Request) {
+	// 입력
 	vars := mux.Vars(r)                //#추가
 	idx, _ := strconv.Atoi(vars["id"]) //#추가
 	var user User
 	_ = json.NewDecoder(r.Body).Decode(&user)
+	// 주요 코드
 	UserList[idx] = user
 	UserList.IdxReset() //#추가
-
+	// 출력
 	rw.WriteHeader(http.StatusAccepted)
 }
 
 // 동작 Delete : DB에 저장된 특정 값 삭제
 func DeleteUser(rw http.ResponseWriter, r *http.Request) {
+	// 입력
 	vars := mux.Vars(r)
 	idx, _ := strconv.Atoi(vars["id"])
+	// 주요 코드
 	UserList = append(UserList[:idx], UserList[idx+1:]...) //#수정
 	UserList.IdxReset()                                    //#추가
-
+	// 출력
 	rw.WriteHeader(http.StatusAccepted)
 }
 
