@@ -16,7 +16,7 @@ import (
 // 구조체 DB 정의 + 동작 정의 + 핸들러 정의
 /* 정의하는 사양은 아래와 같다.
 구조체 	 : user
-DB		 : userList
+DB       : userList
 Util	 : Len, IdxReset
 API리스트
 메소드    URL        동작
