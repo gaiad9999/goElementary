@@ -62,13 +62,17 @@ func InitHandler1() http.Handler {
 // r은 요청하는 내용에 대한 값이 저장되어있다.(받는거)
 // rw는 요청한 내용의 수행 결과에 대한 값들이 저장될 것이다.(보낼거)
 func GetMemberList(rw http.ResponseWriter, r *http.Request) {
+	// 응답 상태
 	rw.WriteHeader(http.StatusOK)
+	// 응답 결과값의 속성정의
 	rw.Header().Set("Content-Type", "application/json")
+	// 응답 결과값 MemberList를 응답자 rw에 씌운다.
 	json.NewEncoder(rw).Encode(MemberList)
 }
 
 // 포트 할당 및 동작 수행
 func FuncMux1() {
+	// 포트 8000번에서 수행하며, 라우터 정의는 InitHandler1()을 따른다.
 	http.ListenAndServe(":8000", InitHandler1())
 }
 
