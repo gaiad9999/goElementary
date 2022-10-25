@@ -17,8 +17,14 @@ import (
 /* 정의하는 사양은 아래와 같다.
 구조체 	 : user
 DB		 : userList
+Util	 : Len, IdxReset
 API리스트
-기존과 동일
+메소드    URL        동작
+Get     /users      DB 호출
+Get     /user/{id}  DB[id] 호출
+Post    /users      DB += []User
+Put     /user/{id}  DB[id] = User
+Delete  /user/{id}  DB[id] 삭제
 */
 // 구조체 및 구조체 리스트 정의
 type User struct {
@@ -39,12 +45,12 @@ func (u Users) InitUserDB() {
 }
 
 // Utils
-// 속성 : DB의 크기
+// Len : DB의 크기
 func (u *Users) Len() int { //#추가
 	return len(*u)
 }
 
-// 메서드 : Idx 할당
+// IdxReset : Idx 할당
 func (u Users) IdxReset() { //#추가
 	for idx := 0; idx < u.Len(); idx++ {
 		u[idx].Idx = idx
