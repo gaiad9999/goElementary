@@ -74,6 +74,7 @@ func InitUserHandler() http.Handler {
 	mux := mux.NewRouter()
 	UserList.InitUserDB()
 	fmt.Println(UserList)
+	mux.Handle("/", http.FileServer(http.Dir("goMux"))) //#웹 샘플코드
 	mux.HandleFunc("/users", GetUserList).Methods("GET")
 	mux.HandleFunc("/user/{id}", GetUser).Methods("GET")
 	mux.HandleFunc("/users", CreateUser).Methods("POST")
@@ -158,7 +159,7 @@ func DeleteUser(rw http.ResponseWriter, r *http.Request) {
 
 // 포트 할당 및 동작 수행
 func FuncMux3() {
-	rd = render.New()                 //#추가 render  (이거 빼먹었더니 오류가 발생함)
+	rd = render.New()                 //#추가 render  (이거 빼먹었더니 오류 발생함)
 	mux := InitUserHandler()          //#추가 negroni
 	neg := negroni.Classic()          //#추가 negroni
 	neg.UseHandler(mux)               //#추가 negroni
@@ -166,6 +167,27 @@ func FuncMux3() {
 
 	//http.ListenAndServe(":8000", InitUserHandler())
 }
+
+/* Mux 관련
+실제로 많이 사용하는 Mux 패키지는 echo 패키지인듯 하다.
+이 고릴라 mux 패키지는 굉장히 쉽게 다룰수 있어서 좋다는 장점이 있지만,
+좀 더 세세한 백엔드 기능들을 컨트롤 하려면 결국 echo를 다룰수 있어야 할지도?
+*/
+
+/* Web 관련
+Web의 핵심이 되는 코드는 다음과 같다.
+mux.Handle("/", http.FileServer(http.Dir("dir")))
+이 코드가 실행되는 경우, /dir/index.html이 실행된다.
+
+a)
+mux.Handle("/", http.FileServer(http.Dir("")))
+로 테스트 해보니 파일 리스트가 뜬다 ㄷㄷ
+근데 b를 한뒤 다시 a를 하면 b결과가 뜨는데 아마 렌더링 덮어쓰기 처리를 해버리는듯 하다.
+b)
+mux.Handle("/", http.FileServer(http.Dir("goMux")))
+로 테스트 해보니 정상적으로 /goMux 안에있는 index.html이 열린다.
+"/goMux"를 하면 오류가 발생하니 주의.
+*/
 
 /* Body 샘플
 [
