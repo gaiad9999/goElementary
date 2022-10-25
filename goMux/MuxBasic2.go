@@ -2,6 +2,7 @@ package goMux
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -38,9 +39,9 @@ type Users []User
 // DB 정의
 var UserList Users
 
-func (u Users) InitUserDB() {
-	u = append(u, User{Idx: 0, Id: 1, Name: "수", Level: 1})
-	u = append(u, User{Idx: 0, Id: 2, Name: "민", Level: 1})
+func (u *Users) InitUserDB() {
+	*u = append(*u, User{Idx: 0, Id: 1, Name: "수", Level: 1})
+	*u = append(*u, User{Idx: 0, Id: 2, Name: "민", Level: 1})
 	u.IdxReset() //#추가
 }
 
@@ -61,6 +62,7 @@ func (u Users) IdxReset() { //#추가
 func InitUserHandler() http.Handler {
 	mux := mux.NewRouter()
 	UserList.InitUserDB()
+	fmt.Println(UserList)
 	mux.HandleFunc("/users", GetUserList).Methods("GET")
 	mux.HandleFunc("/user/{id}", GetUser).Methods("GET")
 	mux.HandleFunc("/users", CreateUser).Methods("POST")
@@ -157,5 +159,4 @@ func FuncMux3() {
   "Level" : 5
 }
 ]
-
 */
