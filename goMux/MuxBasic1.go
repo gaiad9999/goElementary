@@ -2,14 +2,14 @@ package goMux
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
-// 여기에서는 mux 작성에 대한 내용을 추가할 예정
+// 여기에서는 mux 작성에 대한 기본적인 내용을 다룬다.
+// mux 기반 코드 샘플도 겸한다.
 
 // 1. 핸들러 정의
 // 핸들러는 http.Handler로 출력된다.
@@ -78,7 +78,7 @@ func FuncMux1() {
 
 /* mux 동작에 대한 참고 사항
 - 동작은 main.go에서 다룬다.
-- Test는 크롬 앱으로 제공하는 RestApi 테스터를 이용한다.
+- Test는 크롬에서 제공하는 Advenced Rest Client 앱을 이용한다.
 */
 
 // 3. Rest API 정의
@@ -90,37 +90,49 @@ func FuncMux1() {
 
 // 동작 Get : DB내 "특정 데이터만" 출력 (위에서 정의한 Get은 전체 출력)
 func GetMember(rw http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)                // 요청값을 저장함
-	idx, _ := strconv.Atoi(vars["id"]) // 요청값 str {id}를 int로 변환
+	// 요청값 저장
+	vars := mux.Vars(r)
+	// 요청값 str {id}를 int로 변환후 list[id] 호출
+	idx, _ := strconv.Atoi(vars["id"])
 	member := MemberList[idx]
+	// 응답
 	rw.WriteHeader(http.StatusOK)
+	// 결과값 반환
 	rw.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(rw).Encode(member)
 }
 
 // 동작 Create : Json을 입력받아 DB에 저장
 func CreateMember(rw http.ResponseWriter, r *http.Request) {
+	// Body값 저장
 	var member Member
 	_ = json.NewDecoder(r.Body).Decode(&member)
-	fmt.Print(member)
+	// Body값 반영
 	MemberList = append(MemberList, member)
+	// 응답
 	rw.WriteHeader(http.StatusCreated)
 }
 
 // 동작 Update : Json을 입력받아 DB에 저장된 값 수정
 func UpdateMember(rw http.ResponseWriter, r *http.Request) {
+	// Body값 저장
 	var member Member
 	_ = json.NewDecoder(r.Body).Decode(&member)
+	// Body값 반영
 	idx := member.Idx
 	MemberList[idx] = member
+	// 응답
 	rw.WriteHeader(http.StatusAccepted)
 }
 
 // 동작 Delete : DB에 저장된 특정 값 삭제
 func DeleteMember(rw http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r) // 요청값을 저장함
+	// 요청값 저장
+	vars := mux.Vars(r)
+	// 요청값 str {id}를 int로 변환후 list[id] 삭제
 	idx, _ := strconv.Atoi(vars["id"])
 	MemberList[idx] = Member{}
+	// 응답
 	rw.WriteHeader(http.StatusAccepted)
 }
 
