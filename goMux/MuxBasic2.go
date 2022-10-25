@@ -7,15 +7,18 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/unrolled/render"
+	"github.com/urfave/negroni"
 )
 
 // 여기에서는 좀 더 실제로 사용하기에 적합한 mux 코드 샘플을 작성한다.
+// 수정내역
+// 1) json 리스트를 입력받을 수 있는 샘플코드이다.
+// 2) render 패키지를 이용하여 반환결과를 간단하게 작성함.
+// 3) negroni 패키지를 이용하여 동작 제어관리기능을 추가함.
 
-// **리스트 추가 버전 샘플
-// 이 샘플이 입력받는 Json은 리스트 형식이다.
-// 즉, 여러 개의 값들을 한번에 전송할 수 있다.
 // 구조체 DB 정의 + 동작 정의 + 핸들러 정의
-/* 정의하는 사양은 아래와 같다.
+/* 정의되는 사양은 아래와 같다.
 구조체 	 : user
 DB       : userList
 Util	 : Len, IdxReset
@@ -29,10 +32,10 @@ Delete  /user/{id}  DB[id] 삭제
 */
 // 구조체 및 구조체 리스트 정의
 type User struct {
-	Idx   int
-	Id    int
-	Name  string
-	Level int
+	Idx   int    `json:"index"`
+	Id    int    `json:"id"`
+	Name  string `json:"name"`
+	Level int    `json:"Lv"`
 }
 type Users []User
 
@@ -46,6 +49,14 @@ func (u *Users) InitUserDB() {
 }
 
 // Utils
+// render 관련 정의
+var rd *render.Render
+
+type Success struct {
+	Success bool `json:"success"`
+	result  int  // 당연하지만 이 값은 공개가 안된다!
+}
+
 // Len : DB의 크기
 func (u *Users) Len() int { //#추가
 	return len(*u)
@@ -79,9 +90,12 @@ func GetUserList(rw http.ResponseWriter, r *http.Request) {
 	// 주요 코드
 
 	// 출력
-	rw.WriteHeader(http.StatusOK)
-	rw.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(rw).Encode(UserList)
+	rd.JSON(rw, http.StatusOK, UserList) //#수정 render
+	/*
+		rw.WriteHeader(http.StatusOK)
+		rw.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(rw).Encode(UserList)
+	*/
 }
 
 // 동작 Get : DB내 특정 데이터 출력
@@ -92,9 +106,12 @@ func GetUser(rw http.ResponseWriter, r *http.Request) {
 	// 주요 코드
 	user := UserList[idx]
 	// 출력
-	rw.WriteHeader(http.StatusOK)
-	rw.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(rw).Encode(user)
+	rd.JSON(rw, http.StatusOK, user) //#수정 render
+	/*
+		rw.WriteHeader(http.StatusOK)
+		rw.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(rw).Encode(user)
+	*/
 }
 
 // 동작 Create : Json을 입력받아 DB에 저장
@@ -107,7 +124,8 @@ func CreateUser(rw http.ResponseWriter, r *http.Request) {
 	UserList = append(UserList, users...) //#추가
 	UserList.IdxReset()                   //#추가
 	// 출력
-	rw.WriteHeader(http.StatusCreated)
+	rd.JSON(rw, http.StatusCreated, Success{true, 1}) //#수정 render
+	//rw.WriteHeader(http.StatusCreated)
 }
 
 // 동작 Update : Json을 입력받아 DB에 저장된 값 수정
@@ -121,7 +139,8 @@ func UpdateUser(rw http.ResponseWriter, r *http.Request) {
 	UserList[idx] = user
 	UserList.IdxReset() //#추가
 	// 출력
-	rw.WriteHeader(http.StatusAccepted)
+	rd.JSON(rw, http.StatusAccepted, Success{true, 1}) //#수정 render
+	//rw.WriteHeader(http.StatusAccepted)
 }
 
 // 동작 Delete : DB에 저장된 특정 값 삭제
@@ -133,12 +152,19 @@ func DeleteUser(rw http.ResponseWriter, r *http.Request) {
 	UserList = append(UserList[:idx], UserList[idx+1:]...) //#수정
 	UserList.IdxReset()                                    //#추가
 	// 출력
-	rw.WriteHeader(http.StatusAccepted)
+	rd.JSON(rw, http.StatusAccepted, Success{true, 1}) //#수정 render
+	//rw.WriteHeader(http.StatusAccepted)
 }
 
 // 포트 할당 및 동작 수행
 func FuncMux3() {
-	http.ListenAndServe(":8000", InitUserHandler())
+	rd = render.New()                 //#추가 render  (이거 빼먹었더니 오류가 발생함)
+	mux := InitUserHandler()          //#추가 negroni
+	neg := negroni.Classic()          //#추가 negroni
+	neg.UseHandler(mux)               //#추가 negroni
+	http.ListenAndServe(":8000", neg) //#수정 negroni
+
+	//http.ListenAndServe(":8000", InitUserHandler())
 }
 
 /* Body 샘플
